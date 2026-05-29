@@ -1,6 +1,6 @@
 # ExpensePro - Personal Expenses Tracker & AI Finance Analyst
 > **BCA Final Year Project**  
-> A high-performance, full-stack Personal Finance and Expense Tracking application built with React, Vite, Node.js, Express, and Google Gemini 3.5 AI.
+> A high-performance, full-stack Personal Finance and Expense Tracking application built with React, Vite, Node.js, Express, and an Intelligent AI Advice Engine.
 
 ---
 
@@ -10,14 +10,14 @@
 3. [Technology Stack](#-technology-stack)
 4. [Pre-requisites](#-pre-requisites)
 5. [How to Run in Visual Studio Code (Step-by-Step)](#-how-to-run-in-visual-studio-code-step-by-step)
-6. [Configuring the Gemini AI Analyst](#-configuring-the-gemini-ai-analyst)
+6. [Configuring the Intelligent AI Analyst](#-configuring-the-intelligent-ai-analyst)
 7. [Building for Production and Deployment](#-building-for-production-and-deployment)
 8. [Project Structure for Presentations](#-project-structure-for-presentations)
 
 ---
 
 ## 📊 Project Overview
-**ExpensePro** is a modern personal finance manager designed to help users take control of their finances. Unlike static money loggers, ExpensePro incorporates a full-stack **Gemini AI Financial Analyst** using the server-side `@google/genai` SDK to evaluate users' actual transactions, budget targets, and savings goals dynamically, yielding personalized, highly tactical, and numeric suggestions for financial expansion.
+**ExpensePro** is a modern personal finance manager designed to help users take control of their finances. Unlike static money loggers, ExpensePro incorporates a full-stack **Intelligent AI Financial Analyst** to evaluate users' actual transactions, budget targets, and savings goals dynamically, yielding personalized, highly tactical, and numeric suggestions for financial expansion.
 
 ---
 
@@ -29,7 +29,7 @@
 - **Comprehensive Financial Ledger**: Includes full-text query searching, category filters, chronological sorting, table pagination, and an instant **CSV Export** downloading mechanism.
 - **Dynamic Budgets Manager**: Category-level targets with color-shifting visual bars that turn warning-amber at 80% capacity and pulsed danger-crimson once exceeded.
 - **Savings Milestones Tracker**: Define deadlines and targets (e.g. laptop, emergencies) and contribute funds directly block-by-block.
-- **Intelligent Gemini Insights**: Secure, server-side API proxy parsing your ledger to formulate advice, warning thresholds, and checked action roadmaps.
+- **Intelligent Advisor Insights**: Secure, server-side API proxy parsing your ledger to formulate advice, warning thresholds, and checked action roadmaps.
 - **Persistent Offline Storage**: Smooth client-state synchronization with `localStorage` so records are portable.
 
 ---
@@ -39,7 +39,7 @@
 - **Styling Utility**: Tailwind CSS v4 (Custom theme definitions & responsive grids)
 - **Visual Mapping**: Recharts, Lucide React (Icons)
 - **Backend Service**: Express.js (Port `3000`), Node.js, tsx (Typescript execution), and dotenv
-- **Artificial Intelligence**: Google Gemini 3.5 API (`@google/genai` SDK CJS bundle integration via `esbuild`)
+- **Artificial Intelligence**: Smart API LLM Advice Service (NodeJS Client integration via `esbuild`)
 
 ---
 
@@ -75,11 +75,11 @@ Before opening this project in Visual Studio Code, ensure the development machin
 ### Step 4: Configure environment variables (`.env`)
 1. In the VS Code file explorer (left rail), find `.env.example`.
 2. Rename it to just `.env` or duplicate it as `.env`.
-3. Open the `.env` file and replace the placeholder API key with your official Google Gemini API Key:
+3. Open the `.env` file and configure the secure access credentials:
    ```env
-   GEMINI_API_KEY="AIzaSyYourActualAPIKeyHere..."
+   AI_ANALYSIS_KEY="your_secure_analysis_key_here..."
    ```
-   *(To get a free or pay-as-you-go Gemini API Key, visit [aistudio.google.com](https://aistudio.google.com/))*
+   *(The key can be obtained from your chosen cloud intelligence service console and enables dynamic NLP pattern evaluation locally.)*
 
 ### Step 5: Start the Full-Stack Server
 In your terminal, launch the dev server with:
@@ -93,15 +93,15 @@ npm run dev
    ```
    http://localhost:3000
    ```
-3. Your app is now running fully locally! Add records, view chart changes, adjust budgets, and ask Gemini for custom financial blueprints!
+3. Your app is now running fully locally! Add records, view chart changes, adjust budgets, and ask the Intelligent Advisor for custom financial blueprints!
 
 ---
 
-## 🤖 Configuring the Gemini AI Analyst
+## 🤖 Configuring the Intelligent AI Analyst
 The core AI modules operate over standard server endpoints. This guarantees that your sensitive **API KEY remains private** on the backend and is never exposed to the client-side browser bundle:
-1. When you click **"Let Gemini Audit My Expenses"**, the client issues a secure `POST` request to our local `/api/insights` router in `server.ts`.
-2. The server compiles recent ledger nodes, budget alerts, and goals, initializes a GoogleGenAI client, and prompts `gemini-3.5-flash` using strict system instructions.
-3. Gemini processes a structured response in application-ready `JSON` format.
+1. When you click **"Let Smart AI Audit My Expenses"**, the client issues a secure `POST` request to our local `/api/insights` router in `server.ts`.
+2. The server compiles recent ledger nodes, budget alerts, and goals, initializes our secure AI agent client, and prompts the NLP intelligence engine using strict system instructions.
+3. The advice engine processes a structured response in application-ready `JSON` format.
 4. The client paints the breakdown status with customizable growth checkboxes.
 
 ---

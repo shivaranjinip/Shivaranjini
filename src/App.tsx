@@ -7,7 +7,8 @@ import { TransactionList } from './components/TransactionList';
 import { BudgetLimits } from './components/BudgetLimits';
 import { SavingsGoalsTracker } from './components/SavingsGoalsTracker';
 import { AIInsightsPanel } from './components/AIInsightsPanel';
-import { Plus, Check, Moon, Sun, ShieldAlert, Sparkles } from 'lucide-react';
+import { Plus, Check, Moon, Sun, ShieldAlert, Sparkles, LogOut } from 'lucide-react';
+import { LoginScreen } from './components/LoginScreen';
 
 const INITIAL_TRANSACTIONS: Transaction[] = [
   {
@@ -109,12 +110,30 @@ const INITIAL_GOALS: SavingsGoal[] = [
 ];
 
 export default function App() {
+  const [currentUser, setCurrentUser] = useState<{ email: string; name: string } | null>(() => {
+    const saved = localStorage.getItem('expense_pro_current_session');
+    return saved ? JSON.parse(saved) : null;
+  });
+
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [budgets, setBudgets] = useState<BudgetLimit[]>([]);
   const [savingsGoals, setSavingsGoals] = useState<SavingsGoal[]>([]);
   
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+
+  const handleLoginSuccess = (email: string, name: string) => {
+    const userSession = { email, name };
+    setCurrentUser(userSession);
+    localStorage.setItem('expense_pro_current_session', JSON.stringify(userSession));
+  };
+
+  const handleLogout = () => {
+    if (confirm('Are you sure you want to log out and exit to the login page?')) {
+      setCurrentUser(null);
+      localStorage.removeItem('expense_pro_current_session');
+    }
+  };
 
   // Load and seed initial state on component mounting
   useEffect(() => {
@@ -261,6 +280,10 @@ export default function App() {
     }
   };
 
+  if (!currentUser) {
+    return <LoginScreen onLoginSuccess={handleLoginSuccess} />;
+  }
+
   return (
     <div className="min-h-screen bg-slate-50/50 flex flex-col justify-between" id="applet-viewport">
       
@@ -283,6 +306,16 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 border-r border-slate-100 pr-3 mr-1" id="header-user-profile">
+              <div id="user-avatar" className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-extrabold flex items-center justify-center text-xs">
+                {currentUser.name.charAt(0).toUpperCase()}
+              </div>
+              <div className="hidden lg:block text-left col-auto">
+                <p className="text-xs font-bold text-slate-700 leading-none">{currentUser.name}</p>
+                <p className="text-[9px] text-slate-400 font-medium mt-0.5">{currentUser.email}</p>
+              </div>
+            </div>
+
             <span className="text-xs text-slate-400 font-medium hidden sm:inline">
               Today: <b className="text-slate-600 font-bold">{new Date().toLocaleDateString('en-IN', { weekday: 'short', day: '2-digit', month: 'short' })}</b>
             </span>
@@ -296,6 +329,16 @@ export default function App() {
             >
               <Plus className="w-4 h-4" />
               <span>Record Expense</span>
+            </button>
+
+            <button
+              id="btn-trigger-logout"
+              onClick={handleLogout}
+              className="py-2.5 px-3 border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-800 text-xs font-semibold rounded-xl cursor-pointer transition-all flex items-center gap-1.5"
+              title="Exit to Login Page"
+            >
+              <LogOut className="w-4.5 h-4.5" />
+              <span className="hidden md:inline">Exit</span>
             </button>
           </div>
         </div>

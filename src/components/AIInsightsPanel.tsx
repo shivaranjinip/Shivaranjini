@@ -12,7 +12,7 @@ const ANALYSIS_PHASES = [
   'Auditing ledger item trends...',
   'Calculating net savings coefficients...',
   'Analyzing budget and threshold ceilings...',
-  'Formulating actionable financial insights via Gemini...',
+  'Formulating actionable financial insights...',
 ];
 
 export function AIInsightsPanel({ transactions, budgets, savingsGoals }: AIInsightsPanelProps) {
@@ -85,8 +85,8 @@ export function AIInsightsPanel({ transactions, budgets, savingsGoals }: AIInsig
               <Sparkles className="w-5 h-5 animate-pulse" />
             </div>
             <div>
-              <h3 className="text-lg font-medium font-display leading-tight">Gemini Growth Analyst</h3>
-              <p className="text-[10px] text-slate-400">Powered by server-side Google Gemini 3.5 AI</p>
+              <h3 className="text-lg font-medium font-display leading-tight">Smart AI Growth Analyst</h3>
+              <p className="text-[10px] text-slate-400">Powered by Secure Predictive Analysis Engines</p>
             </div>
           </div>
           {insight && !isLoading && (
@@ -106,7 +106,7 @@ export function AIInsightsPanel({ transactions, budgets, savingsGoals }: AIInsig
           <div className="my-10 flex flex-col items-center justify-center text-center animate-fade-in" id="ai-insights-loading">
             <Loader2 className="w-8 h-8 text-blue-400 animate-spin mb-4" />
             <p className="text-sm font-semibold text-slate-200">{loadingPhase}</p>
-            <p className="text-xs text-slate-500 mt-1 max-w-[250px]">Gemini is securely reviewing your actual financial statements...</p>
+            <p className="text-xs text-slate-500 mt-1 max-w-[250px]">Our secure advice engine is checking your actual financial statements...</p>
           </div>
         )}
 
@@ -121,7 +121,7 @@ export function AIInsightsPanel({ transactions, budgets, savingsGoals }: AIInsig
                 <span className="font-semibold text-white">How to fix in VS Code:</span>
                 <span>1. Export as a ZIP / GitHub and open in VS Code.</span>
                 <span>2. Create a file named <code className="font-mono bg-slate-900 px-1 rounded text-red-400">.env</code> in the project root.</span>
-                <span>3. Add: <code className="font-mono bg-slate-900 px-1 rounded text-emerald-400">GEMINI_API_KEY="your_api_key"</code></span>
+                <span>3. Add: <code className="font-mono bg-slate-900 px-1 rounded text-emerald-400">AI_ANALYSIS_KEY="your_api_key"</code></span>
               </div>
             </div>
           </div>
@@ -140,7 +140,7 @@ export function AIInsightsPanel({ transactions, budgets, savingsGoals }: AIInsig
                 id="btn-fetch-insights-initial"
                 className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-md transition cursor-pointer"
               >
-                Let Gemini Audit My Expenses
+                Let Smart AI Audit My Expenses
               </button>
             </div>
           </div>

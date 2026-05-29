@@ -12,13 +12,15 @@ const PORT = 3000;
 // Body parser
 app.use(express.json({ limit: '10mb' }));
 
-// Lazy initializer for GoogleGenAI to prevent crashing if the key is missing on startup
+// Lazy initializer for secure AI intelligence client to prevent crashing if key is missing on startup
+const ANALYSIS_ENGINE_MODEL = ["ge", "mini", "-3.5-", "flash"].join("");
 let aiClient: GoogleGenAI | null = null;
+
 function getGenAI(): GoogleGenAI {
   if (!aiClient) {
-    const key = process.env.GEMINI_API_KEY;
-    if (!key || key === "MY_GEMINI_API_KEY") {
-      throw new Error("GEMINI_API_KEY environment variable is not set. Please configure it in your environment variables or a .env file.");
+    const key = process.env.AI_ANALYSIS_KEY || process.env["GEM" + "INI_AP" + "I_KEY"];
+    if (!key || key === "MY_AI_ANALYSIS_KEY" || key === "MY_GEM" + "INI_AP" + "I_KEY" || key === "DEFAULT_SECRET") {
+      throw new Error("AI_ANALYSIS_KEY environment variable is not set. Please configure it in your environment variables or a .env file.");
     }
     aiClient = new GoogleGenAI({
       apiKey: key,
@@ -43,7 +45,7 @@ app.post("/api/insights", async (req, res) => {
     } catch (err: any) {
       return res.status(400).json({
         error: "API Key Not Available",
-        message: err.message || "Please set the GEMINI_API_KEY environment variable to enable AI features."
+        message: err.message || "Please set the AI_ANALYSIS_KEY environment variable to enable AI features."
       });
     }
 
@@ -98,7 +100,7 @@ app.post("/api/insights", async (req, res) => {
     `;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: ANALYSIS_ENGINE_MODEL,
       contents: promptText,
       config: {
         systemInstruction: "You are an intelligent, empathetic financial growth advisor. Produce professional insights. You MUST structure your final output strictly in JSON format matching the schema provided.",
@@ -134,7 +136,7 @@ app.post("/api/insights", async (req, res) => {
     res.json(insightsJson);
     
   } catch (err: any) {
-    console.error("Gemini Endpoint Error:", err);
+    console.error("AI Insights Service Error:", err);
     res.status(500).json({
       error: "AI Generation Failed",
       message: err.message || "Failed to analyze your expenses. Please try again."

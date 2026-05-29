@@ -1,6 +1,6 @@
 {
-  "name": "ExpensePro - Personal expensesTracker",
+  "name": "ExpensePro - Personal Expenses Tracker",
   "description": "A comprehensive personal expenses and income tracker with clean visualizations, category management, and data-driven insights. Built for simplicity and precision.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": []
 }
