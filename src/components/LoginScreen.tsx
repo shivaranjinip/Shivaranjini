@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Lock, User, Sparkles, AlertCircle, ArrowRight, Wallet } from 'lucide-react';
+import { Mail, Lock, User, Sparkles, AlertCircle, ArrowRight, ShieldCheck, HelpCircle } from 'lucide-react';
 
 interface LoginScreenProps {
   onLoginSuccess: (userEmail: string, userName: string) => void;
@@ -13,46 +13,44 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Suggested admin demo credentials
+  // Suggested demo credentials
   const DEMO_EMAIL = 'demo@expensepro.com';
   const DEMO_PASSWORD = 'password123';
   const DEMO_NAME = 'Demonstration User';
 
-  // Handle standard actions
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     setTimeout(() => {
-      // 1. Validation
       if (!email.trim() || !password.trim()) {
-        setError('All fields are required.');
+        setError('All credentials fields are required.');
         setLoading(false);
         return;
       }
 
       if (!isLogin && !name.trim()) {
-        setError('Please enter your name.');
+        setError('Please enter your full name to set up the sovereign ledger.');
         setLoading(false);
         return;
       }
 
       if (password.length < 6) {
-        setError('Password must be at least 6 characters.');
+        setError('Security password must be at least 6 characters.');
         setLoading(false);
         return;
       }
 
       if (isLogin) {
-        // Direct Demo Credential Match
+        // Direct match with Demo Credentials
         if (email.toLowerCase() === DEMO_EMAIL.toLowerCase() && password === DEMO_PASSWORD) {
           onLoginSuccess(DEMO_EMAIL, DEMO_NAME);
           setLoading(false);
           return;
         }
 
-        // Check local storage registered users
+        // Search local registered database
         const storedUsers = localStorage.getItem('expense_pro_registered_users');
         if (storedUsers) {
           const users = JSON.parse(storedUsers);
@@ -67,15 +65,14 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
           }
         }
 
-        setError('Invalid email or password. You can use the Demo Credentials below.');
+        setError('Invalid credentials combination. Use the Quick-Fill Demo Sandbox Key listed below.');
       } else {
-        // Sign Up/Registration Action
+        // Sign Up/New account registration
         const storedUsers = localStorage.getItem('expense_pro_registered_users');
         const users = storedUsers ? JSON.parse(storedUsers) : [];
 
-        // Check duplicate
         if (email.toLowerCase() === DEMO_EMAIL.toLowerCase() || users.some((u: any) => u.email.toLowerCase() === email.toLowerCase())) {
-          setError('An account with this email address already exists.');
+          setError('A secure portfolio ledger with this email already exists.');
           setLoading(false);
           return;
         }
@@ -89,11 +86,10 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
         const updatedUsers = [...users, newUser];
         localStorage.setItem('expense_pro_registered_users', JSON.stringify(updatedUsers));
 
-        // Auto transition and login
         onLoginSuccess(newUser.email, newUser.name);
       }
       setLoading(false);
-    }, 600);
+    }, 550);
   };
 
   const handleUseDemo = () => {
@@ -104,210 +100,242 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col justify-between p-4 md:p-8 font-sans" id="login-viewport">
+    <div className="min-h-screen w-full flex flex-col md:flex-row bg-organic-bg text-organic-text-on font-nunito" id="login-screen-view">
       
-      {/* Upper Logo / Brand header */}
-      <div className="max-w-7xl mx-auto w-full flex justify-between items-center py-4" id="login-top-logo">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-extrabold text-lg">
-            ₹
-          </div>
-          <div>
-            <span className="font-bold text-lg text-slate-100 font-display tracking-tight">ExpensePro</span>
-            <span className="text-[9px] text-blue-400 font-bold ml-1.5 border border-blue-900/40 bg-blue-950/80 px-1 py-0.5 rounded">
-              SECURE
-            </span>
-          </div>
-        </div>
-        <div id="login-header-academic">
-          <span className="text-[10px] text-slate-500 font-medium tracking-wide">BCA FINAL LEVEL PROJECT</span>
-        </div>
-      </div>
-
-      {/* Main visual & form grid container */}
-      <div className="max-w-4xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-8 items-center justify-center my-auto py-8" id="login-container">
+      {/* LEFT SECTION: Authenticating Desk */}
+      <section className="w-full md:w-[45%] lg:w-[40%] flex flex-col justify-between px-6 md:px-12 lg:px-16 py-8 bg-organic-bg z-1 z-10 border-r border-[#eae6de] shadow-lg">
         
-        {/* Left Side: Brand presentation / pitch */}
-        <div className="md:col-span-6 space-y-6 text-slate-300 pr-0 md:pr-4" id="login-visual-text">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900 text-blue-400 border border-slate-800 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-            <span>Secure Enterprise Architecture</span>
-          </div>
-
-          <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight font-display">
-            Navigate your wealth with <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">absolute control</span>.
-          </h2>
-
-          <p className="text-sm text-slate-400 leading-relaxed">
-            ExpensePro provides precise category tracking, real-time dynamic budget control limits, goals allocation pipelines, and bespoke client analytics in one unified ledger workspace.
-          </p>
-
-          {/* Quick Stats list */}
-          <div className="grid grid-cols-2 gap-4 pt-2" id="login-stats">
-            <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-900">
-              <span className="block text-xl font-bold text-blue-400">100%</span>
-              <span className="text-[11px] text-slate-500 font-medium font-sans">Local Data Security</span>
+        {/* Upper Brand Badge */}
+        <div className="flex items-center justify-between pb-4" id="login-header text-slate-800">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-organic-primary rounded-xl flex items-center justify-center text-white font-extrabold text-xl shadow-md shadow-organic-primary/20">
+              ₹
             </div>
-            <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-900">
-              <span className="block text-xl font-bold text-indigo-400 font-mono">₹ Live</span>
-              <span className="text-[11px] text-slate-500 font-medium font-sans font-sans">Multi-Category Ledger</span>
+            <div>
+              <span className="font-header text-base text-organic-text-on font-bold tracking-tight block">ExpensePro</span>
+              <span className="text-[9px] uppercase tracking-wider font-bold text-organic-primary mt-[-2px] block">
+                Sovereign Ledger
+              </span>
             </div>
           </div>
+          <span className="text-[10px] bg-organic-surface-low border border-organic-border/40 text-[#6b6358] px-2 py-0.5 rounded-full font-bold">
+            BCA PROJECT
+          </span>
         </div>
 
-        {/* Right Side: LogIn and Register unified secure control card */}
-        <div className="md:col-span-6" id="login-card-wrapper">
-          <div className="bg-slate-900 border border-slate-800/80 rounded-2xl shadow-xl overflow-hidden p-6 md:p-8 space-y-6" id="login-card">
+        {/* Core Auth Forms block */}
+        <div className="my-auto py-8 space-y-6" id="auth-flow-wrapper">
+          <div className="space-y-1.5">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-organic-primary/10 text-organic-primary-dark text-[10px] font-bold uppercase tracking-wider">
+              <Sparkles className="w-3 h-3 text-organic-primary" />
+              <span>Grounded Financial Intent</span>
+            </div>
             
-            {/* Toggle state selector tabs */}
-            <div className="flex bg-slate-950 p-1 rounded-lg border border-slate-800" id="login-toggle-tabs">
-              <button
-                type="button"
-                id="tab-select-login"
-                onClick={() => {
-                  setIsLogin(true);
-                  setError('');
-                }}
-                className={`flex-1 py-2 text-xs font-semibold rounded-md transition-all ${
-                  isLogin
-                    ? 'bg-blue-600 text-white shadow-xs'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                Sign In
-              </button>
-              <button
-                type="button"
-                id="tab-select-register"
-                onClick={() => {
-                  setIsLogin(false);
-                  setError('');
-                }}
-                className={`flex-1 py-2 text-xs font-semibold rounded-md transition-all ${
-                  !isLogin
-                    ? 'bg-blue-600 text-white shadow-xs'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                New Account
-              </button>
+            <h1 className="font-serif text-3.5xl font-black text-organic-text-on tracking-tight leading-tight pt-1">
+              {isLogin ? 'Welcome Back' : 'Create Ledger'}
+            </h1>
+            <p className="text-xs text-organic-secondary leading-relaxed">
+              {isLogin 
+                ? 'Manage your household budgets, income pipelines, and academic targets with steady steps.'
+                : 'Seed your database instance locally and secure it with a private client-side ledger key.'
+              }
+            </p>
+          </div>
+
+          {/* Dual Toggle Selectors */}
+          <div className="flex bg-organic-surface-low border border-organic-border/70 p-1 rounded-xl" id="auth-state-toggles">
+            <button
+              type="button"
+              id="btn-toggle-to-sigin"
+              onClick={() => {
+                setIsLogin(true);
+                setError('');
+              }}
+              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                isLogin
+                  ? 'bg-organic-primary text-white shadow-xs'
+                  : 'text-organic-secondary hover:text-organic-text-on'
+              }`}
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              id="btn-toggle-to-create"
+              onClick={() => {
+                setIsLogin(false);
+                setError('');
+              }}
+              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                !isLogin
+                  ? 'bg-organic-primary text-white shadow-xs'
+                  : 'text-organic-secondary hover:text-organic-text-on'
+              }`}
+            >
+              Create Account
+            </button>
+          </div>
+
+          {/* Authentication Alert Feedback */}
+          {error && (
+            <div className="p-3 bg-red-100/40 border border-red-200 text-red-700 text-xs rounded-xl flex items-center gap-2" id="auth-toast-problem">
+              <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+              <p className="font-medium">{error}</p>
+            </div>
+          )}
+
+          {/* Actual Form Fields */}
+          <form onSubmit={handleSubmit} className="space-y-4" id="credentials-inner-form">
+            {!isLogin && (
+              <div className="space-y-1" id="form-name-field">
+                <label className="text-[11px] font-bold text-[#6b6358] uppercase tracking-wide ml-0.5">Your Full Name</label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 o-4 text-organic-primary/60" />
+                  <input
+                    type="text"
+                    required
+                    id="input-name-register"
+                    placeholder="e.g. Shivanand Patil"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full px-3 py-2.5 pl-9 bg-white border border-[#c4c8bc] focus:border-[#4a7c59] focus:ring-2 focus:ring-[#4a7c59]/20 rounded-xl text-xs text-organic-text-on outline-hidden transition-all duration-200"
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-1" id="form-email-field">
+              <label className="text-[11px] font-bold text-[#6b6358] uppercase tracking-wide ml-0.5">Email Address</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 o-4 text-organic-primary/60" />
+                <input
+                  type="email"
+                  required
+                  id="input-email-auth"
+                  placeholder="hello@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-3 py-2.5 pl-9 bg-white border border-[#c4c8bc] focus:border-[#4a7c59] focus:ring-2 focus:ring-[#4a7c59]/20 rounded-xl text-xs text-organic-text-on outline-hidden transition-all duration-200"
+                />
+              </div>
             </div>
 
-            {/* Error messaging bar */}
-            {error && (
-              <div
-                className="p-3 bg-rose-950/20 border border-rose-900/40 text-rose-400 rounded-xl text-xs flex items-center gap-2"
-                id="login-error-toast"
-              >
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>{error}</span>
-              </div>
-            )}
-
-            {/* Credential login forms */}
-            <form onSubmit={handleSubmit} className="space-y-4" id="login-action-form">
-              {!isLogin && (
-                <div className="space-y-1.5" id="form-group-name">
-                  <label className="text-xs font-semibold text-slate-400 block">Full Name</label>
-                  <div className="relative">
-                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                    <input
-                      type="text"
-                      className="w-full bg-slate-950 border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl py-2.5 pl-10 pr-4 text-xs text-white placeholder-slate-600 outline-none transition-all"
-                      placeholder="e.g. Shivanand Patil"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
-                  </div>
-                </div>
-              )}
-
-              <div className="space-y-1.5" id="form-group-email">
-                <label className="text-xs font-semibold text-slate-400 block">Email Address</label>
-                <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                  <input
-                    type="email"
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl py-2.5 pl-10 pr-4 text-xs text-white placeholder-slate-600 outline-none transition-all"
-                    placeholder="e.g. you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1.5" id="form-group-password">
-                <label className="text-xs font-semibold text-slate-400 block">Security Password</label>
-                <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                  <input
-                    type="password"
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl py-2.5 pl-10 pr-4 text-xs text-white placeholder-slate-600 outline-none transition-all"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                id="btn-login-submit"
-                disabled={loading}
-                className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold text-xs rounded-xl shadow-md cursor-pointer transition-all flex items-center justify-center gap-2 mt-2"
-              >
-                {loading ? (
-                  <span>Saving Session...</span>
-                ) : (
-                  <>
-                    <span>{isLogin ? 'Access Account Workspace' : 'Create Secure ID'}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </>
+            <div className="space-y-1" id="form-password-field">
+              <div className="flex justify-between items-center text-[11px] font-bold text-[#6b6358] uppercase tracking-wide ml-0.5">
+                <span>Security Password</span>
+                {isLogin && (
+                  <span className="text-[10px] text-organic-primary hover:underline cursor-not-allowed">Reset Key</span>
                 )}
-              </button>
-            </form>
+              </div>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 o-4 text-organic-primary/60" />
+                <input
+                  type="password"
+                  required
+                  id="input-password-auth"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-3 py-2.5 pl-9 bg-white border border-[#c4c8bc] focus:border-[#4a7c59] focus:ring-2 focus:ring-[#4a7c59]/20 rounded-xl text-xs text-organic-text-on outline-hidden transition-all duration-200"
+                />
+              </div>
+            </div>
 
-            {/* Quick Demo Assist section for Examiners and Quick start */}
-            {isLogin && (
-              <div className="pt-4 border-t border-slate-800/60" id="login-demo-aid">
-                <div className="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800/80 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] uppercase tracking-wider font-extrabold text-slate-500 block">
-                      Project Demo Sandbox Acc
-                    </span>
-                    <button
-                      type="button"
-                      id="btn-quick-fill-demo"
-                      onClick={handleUseDemo}
-                      className="text-[10px] text-blue-400 hover:text-blue-300 font-bold transition-colors cursor-pointer"
-                    >
-                      Fill Credentials
-                    </button>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 text-[10px] text-slate-400">
-                    <div>
-                      <span className="text-slate-500">Email:</span> <b className="font-mono text-slate-300">{DEMO_EMAIL}</b>
-                    </div>
-                    <div>
-                      <span className="text-slate-500">Pwd:</span> <b className="font-mono text-slate-300">{DEMO_PASSWORD}</b>
-                    </div>
-                  </div>
+            <button
+              type="submit"
+              id="submit-auth-primary-action"
+              disabled={loading}
+              className="w-full py-3 px-4 bg-organic-primary hover:bg-organic-primary-dark active:scale-[0.99] disabled:opacity-50 text-white font-bold text-xs rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer mt-3"
+            >
+              {loading ? (
+                <span className="flex items-center gap-1.5 animate-pulse">
+                  <ShieldCheck className="w-4 h-4 text-emerald-300 animate-spin" />
+                  <span>Committing Security handshake...</span>
+                </span>
+              ) : (
+                <>
+                  <span>{isLogin ? 'Access Secure Portfolio' : 'Initialize Dynamic Ledger'}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Quick Demo Assist Sandbox Card */}
+          {isLogin && (
+            <div className="p-3.5 bg-organic-surface-card border border-organic-border/60 rounded-xl space-y-2 text-xs" id="academic-demo-card">
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] uppercase tracking-wider font-extrabold text-[#6b6358] block">
+                  Examiner Sandbox Credentials
+                </span>
+                <button
+                  type="button"
+                  id="btn-use-quick-auth-demo"
+                  onClick={handleUseDemo}
+                  className="text-[10px] text-organic-primary hover:text-organic-primary-dark font-black underline transition-colors cursor-pointer"
+                >
+                  Quick Fill Demo
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-[10px] text-[#6b6358] font-semibold font-mono">
+                <div>
+                  <span className="text-slate-400">UID:</span> <b className="text-organic-text-on bg-white px-1 py-0.5 rounded border border-organic-border/30">{DEMO_EMAIL}</b>
+                </div>
+                <div>
+                  <span className="text-slate-400">KEY:</span> <b className="text-organic-text-on bg-white px-1 py-0.5 rounded border border-organic-border/30">password123</b>
                 </div>
               </div>
-            )}
-
-          </div>
+            </div>
+          )}
         </div>
 
-      </div>
+        {/* Academic Project Credits */}
+        <footer className="text-[10px] text-organic-secondary/80 border-t border-organic-border/40 pt-4 flex flex-col gap-1" id="academic-notes">
+          <p className="font-semibold text-organic-text-on">© 2026 ExpensePro Project Applet.</p>
+          <p>Rooted in Clarity • Secured with Sovereign Device LocalStorage</p>
+        </footer>
 
-      {/* Footer copyright marker */}
-      <div className="text-center py-4 border-t border-slate-900 max-w-7xl mx-auto w-full flex flex-col sm:flex-row justify-between items-center text-[11px] text-slate-600 gap-2" id="login-footer">
-        <p>© 2026 ExpensePro Academic Project Sandbox Client. All rights reserved.</p>
-        <p className="font-medium bg-slate-900 border border-slate-800 text-slate-500 px-2 py-0.5 rounded">
-          Local Storage Session Cache Mode
-        </p>
-      </div>
+      </section>
+
+      {/* RIGHT SECTION: Organic Earthy Interactive Branding Graphic */}
+      <section className="hidden md:flex relative w-full md:w-[55%] lg:w-[60%] h-full bg-[#f0e8db] items-center justify-center overflow-hidden p-12 select-none" id="right-branding-panel">
+        
+        {/* Holographic glowing organic clouds */}
+        <div className="absolute top-20 right-20 w-80 h-80 bg-organic-primary/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-40 left-10 w-96 h-96 bg-[#c4a66a]/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col items-center text-center p-6 space-y-8" id="right-core-content">
+          
+          {/* Main Floating 3D Artwork Element */}
+          <div className="floating-element max-w-[420px] filter drop-shadow-[0_24px_64px_rgba(74,124,89,0.22)]" id="floating-artwork">
+            <img 
+              alt="Organic isometric financial growth illustration" 
+              className="w-full h-auto object-contain rounded-2xl" 
+              src="https://lh3.googleusercontent.com/aida/ADBb0ugYU7lnPoRae0WpJwpBj3b8bI-FgnAAZsrnQcB08IUllHu3h8pku6Ctffo9QxGPGWB6zPagMm4wqolHgaLjoXRlCYu5xOie3OhuT28BMyH5s5hepw1is7LY9_TZSaUNPnB98STGIIJFNE-HVqiL5ygEOiPMGsODfgaxPbf4yuB2Du324UABtw80hmuMHaFpQkBU5jTTPw7F2c8XuPQpsUg1tNX3JYtFgOq38tMAnujv-fP90JlLdO1AMQiH"
+            />
+          </div>
+
+          <div className="max-w-md space-y-3" id="right-copy">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-organic-primary text-xs font-semibold shadow-xs">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Grounded in Intention</span>
+            </span>
+            <h2 className="font-serif text-3xl font-black text-organic-primary-dark tracking-tight leading-tight">
+              Sovereign Asset Cultivation
+            </h2>
+            <p className="text-sm text-[#4a4538] leading-relaxed">
+              Experience a highly structured approaches to consumer accounting. ExpensePro helps you cultivate your funds with calm, purposeful, and steady milestones.
+            </p>
+          </div>
+
+        </div>
+
+        {/* Fancy organic curve banner */}
+        <svg className="absolute bottom-0 left-0 w-full h-auto text-organic-primary/5 pointer-events-none" preserveAspectRatio="none" viewBox="0 0 1440 320">
+          <path d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,149.3C672,149,768,203,864,224C960,245,1056,235,1152,202.7C1248,171,1344,117,1392,90.7L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" fill="currentColor"></path>
+        </svg>
+
+      </section>
 
     </div>
   );

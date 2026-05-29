@@ -9,6 +9,7 @@ import { SavingsGoalsTracker } from './components/SavingsGoalsTracker';
 import { AIInsightsPanel } from './components/AIInsightsPanel';
 import { Plus, Check, Moon, Sun, ShieldAlert, Sparkles, LogOut } from 'lucide-react';
 import { LoginScreen } from './components/LoginScreen';
+import { ExitPage } from './components/ExitPage';
 
 const INITIAL_TRANSACTIONS: Transaction[] = [
   {
@@ -122,6 +123,9 @@ export default function App() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
 
+  const [isExited, setIsExited] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
   const handleLoginSuccess = (email: string, name: string) => {
     const userSession = { email, name };
     setCurrentUser(userSession);
@@ -129,10 +133,10 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    if (confirm('Are you sure you want to log out and exit to the login page?')) {
-      setCurrentUser(null);
-      localStorage.removeItem('expense_pro_current_session');
-    }
+    setCurrentUser(null);
+    localStorage.removeItem('expense_pro_current_session');
+    setIsExited(true);
+    setIsLogoutModalOpen(false);
   };
 
   // Load and seed initial state on component mounting
@@ -280,6 +284,10 @@ export default function App() {
     }
   };
 
+  if (isExited) {
+    return <ExitPage onReturnToLogin={() => setIsExited(false)} />;
+  }
+
   if (!currentUser) {
     return <LoginScreen onLoginSuccess={handleLoginSuccess} />;
   }
@@ -328,12 +336,12 @@ export default function App() {
               className="py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl shadow-md cursor-pointer transition-all flex items-center gap-1.5"
             >
               <Plus className="w-4 h-4" />
-              <span>Record Expense</span>
+              <span>Record Income / Expense</span>
             </button>
 
             <button
               id="btn-trigger-logout"
-              onClick={handleLogout}
+              onClick={() => setIsLogoutModalOpen(true)}
               className="py-2.5 px-3 border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-800 text-xs font-semibold rounded-xl cursor-pointer transition-all flex items-center gap-1.5"
               title="Exit to Login Page"
             >
@@ -362,20 +370,6 @@ export default function App() {
           
           {/* Columns Left: Transaction actions / limits / goals */}
           <div className="lg:col-span-4 space-y-6 flex flex-col h-full justify-between" id="actions-columns-left">
-            {/* Conditional Transaction Input Form */}
-            {isFormOpen && (
-              <div id="wrapper-tx-form" className="animate-fade-in shrink-0">
-                <TransactionForm
-                  onSave={handleSaveTransaction}
-                  editingTransaction={editingTransaction}
-                  onCancel={() => {
-                    setIsFormOpen(false);
-                    setEditingTransaction(null);
-                  }}
-                />
-              </div>
-            )}
-
             {/* Target Budgets progress lists */}
             <div className="flex-1" id="wrapper-budgets">
               <BudgetLimits
@@ -430,6 +424,57 @@ export default function App() {
         <p className="mt-1">Successfully designed for BCA Fifth/Sixth Semester Final Year Project Demonstration</p>
         <p className="mt-2 text-[10px] text-slate-300">© 2026 ExpensePro Project Applet. Local client storage data persistent.</p>
       </footer>
+
+      {/* 📝 Record / Edit Transaction Modal */}
+      {isFormOpen && (
+        <div id="transaction-modal-overlay" className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="w-full max-w-md shadow-2xl relative" id="transaction-modal-content">
+            <TransactionForm
+              onSave={handleSaveTransaction}
+              editingTransaction={editingTransaction}
+              onCancel={() => {
+                setIsFormOpen(false);
+                setEditingTransaction(null);
+              }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* 🔐 Full Custom Logout Modal Confirmation Dialog */}
+      {isLogoutModalOpen && (
+        <div id="logout-confirm-modal" className="fixed inset-0 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-white border border-slate-100 rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-xl">
+            <div className="flex items-center gap-2.5 text-amber-600">
+              <ShieldAlert className="w-5.5 h-5.5 animate-pulse" />
+              <span className="font-bold text-sm uppercase tracking-wide">Confirm Exit</span>
+            </div>
+            
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Are you sure you want to log out and terminate your current ExpensePro secure workspace session? Your budget and ledger targets will remain cached on your device.
+            </p>
+
+            <div className="flex gap-2.5 pt-1.5">
+              <button
+                type="button"
+                id="btn-close-logout-modal"
+                onClick={() => setIsLogoutModalOpen(false)}
+                className="flex-1 py-2 border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs font-semibold rounded-xl transition"
+              >
+                Stay Logged In
+              </button>
+              <button
+                type="button"
+                id="btn-confirm-secure-logout"
+                onClick={handleLogout}
+                className="flex-1 py-2 bg-slate-900 hover:bg-slate-950 text-white text-xs font-semibold rounded-xl transition-all shadow-md"
+              >
+                Yes, Secure Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -259,10 +259,10 @@ export function TransactionList({ transactions, onDeleteTransaction, onEditTrans
 
                     {/* Edit / Delete actions */}
                     <td className="py-3.5 px-3 text-right">
-                      <div className="flex items-center justify-end gap-1 opacity-100 md:opacity-0 md:group-hover/row:opacity-100 transition-opacity">
+                      <div className="flex items-center justify-end gap-1 opacity-100">
                         <button
                           onClick={() => onEditTransaction(t)}
-                          className="p-1 px-2 hover:bg-blue-50 text-blue-500 rounded-md transition"
+                          className="p-1 px-2 hover:bg-blue-50 text-blue-500 hover:text-blue-600 rounded-md transition"
                           title="Edit transaction"
                           id={`btn-edit-${t.id}`}
                         >
@@ -270,7 +270,7 @@ export function TransactionList({ transactions, onDeleteTransaction, onEditTrans
                         </button>
                         <button
                           onClick={() => onDeleteTransaction(t.id)}
-                          className="p-1 px-2 hover:bg-rose-50 text-rose-500 rounded-md transition"
+                          className="p-1 px-2 hover:bg-rose-50 text-rose-500 hover:text-rose-600 rounded-md transition"
                           title="Delete transaction"
                           id={`btn-delete-${t.id}`}
                         >

@@ -1,22 +1,46 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,700;7..72,900&family=Nunito+Sans:wght@300;400;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Literata", serif;
+  --font-nunito: "Nunito Sans", sans-serif;
   
   --color-primary-50: #f5f8ff;
   --color-primary-100: #ebf1ff;
   --color-primary-600: #2563eb;
   --color-primary-700: #1d4ed8;
   --color-primary-800: #1e40af;
+
+  /* Earthy Organic "SpendWise" Theme Colors */
+  --color-organic-bg: #faf6f0;
+  --color-organic-primary: #4a7c59;
+  --color-organic-primary-dark: #2a6038;
+  --color-organic-on-primary: #ffffff;
+  --color-organic-surface-low: #f5f1ea;
+  --color-organic-surface-card: #f0ece4;
+  --color-organic-text-on: #2e3230;
+  --color-organic-border: #c4c8bc;
+  --color-organic-secondary: #6b6358;
 }
 
 body {
-  font-family: var(--font-sans);
-  background-color: #f8fafc;
-  color: #1e293b;
+  font-family: var(--font-nunito), var(--font-sans);
+  background-color: #faf6f0;
+  color: #2e3230;
+}
+
+/* Float animation from SpendWise template */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-16px); }
+  100% { transform: translateY(0px); }
+}
+
+.floating-element {
+  animation: float 6s ease-in-out infinite;
 }
 
 /* Custom modern scrollbars */

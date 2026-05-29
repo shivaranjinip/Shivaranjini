@@ -56,16 +56,13 @@ export function TransactionForm({ onSave, editingTransaction, onCancel }: Transa
     }
   }, [editingTransaction]);
 
-  // Dynamically update category selections when Type toggles
+  // Dynamically update category selections when Type toggles, or when editing toggles type
   useEffect(() => {
-    if (!editingTransaction) {
-      if (type === 'EXPENSE') {
-        setCategory(EXPENSE_CATEGORIES[0]);
-      } else {
-        setCategory(INCOME_CATEGORIES[0]);
-      }
+    const categoriesForType = type === 'EXPENSE' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
+    if (!categoriesForType.includes(category)) {
+      setCategory(categoriesForType[0]);
     }
-  }, [type, editingTransaction]);
+  }, [type, category]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
