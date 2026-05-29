@@ -13,6 +13,7 @@ export interface Transaction {
 export interface BudgetLimit {
   category: string;
   limit: number;
+  color?: string; // Optional custom hexadecimal color theme
 }
 
 export interface SavingsGoal {

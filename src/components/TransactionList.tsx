@@ -1,20 +1,38 @@
 import { useState, useMemo } from 'react';
-import { Transaction, TransactionType } from '../types';
+import { Transaction, TransactionType, BudgetLimit } from '../types';
 import { Search, Filter, ArrowUpDown, Trash2, Edit2, Download, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface TransactionListProps {
   transactions: Transaction[];
   onDeleteTransaction: (id: string) => void;
   onEditTransaction: (transaction: Transaction) => void;
+  budgets?: BudgetLimit[];
 }
 
-export function TransactionList({ transactions, onDeleteTransaction, onEditTransaction }: TransactionListProps) {
+const CATEGORY_DEFAULT_COLORS: Record<string, string> = {
+  'Food & Dining': '#ff007f',   // Vivid Pink-Rose
+  'Rent & Utilities': '#00c3ff', // Electric Turquoise
+  'Shopping': '#d946ef',         // Bright Fuchsia
+  'Transportation': '#facc15',   // Vivid Yellow
+  'Entertainment': '#a855f7',    // Vibrant Purple
+  'Healthcare': '#10b981',       // Mint Emerald
+  'Education': '#6366f1',        // Electric Indigo
+  'Other': '#64748b',            // Modern Slate
+};
+const DEFAULT_COLOR = '#94a3b8';
+
+export function TransactionList({ transactions, onDeleteTransaction, onEditTransaction, budgets = [] }: TransactionListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<TransactionType | 'ALL'>('ALL');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [sortBy, setSortBy] = useState<'date' | 'amount'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [currentPage, setCurrentPage] = useState(1);
+
+  const getCategoryColor = (name: string) => {
+    const budget = budgets.find((b) => b.category === name);
+    return budget?.color || CATEGORY_DEFAULT_COLORS[name] || DEFAULT_COLOR;
+  };
 
   const itemsPerPage = 8;
 
@@ -231,9 +249,21 @@ export function TransactionList({ transactions, onDeleteTransaction, onEditTrans
 
                     {/* Category tag */}
                     <td className="py-3.5 px-3">
-                      <span className="inline-block px-2 py-0.5 bg-slate-100 text-slate-600 font-medium rounded-full text-[10px] whitespace-nowrap">
-                        {t.category}
-                      </span>
+                      {(() => {
+                        const bColor = getCategoryColor(t.category);
+                        return (
+                          <span 
+                            className="inline-block px-2.5 py-0.5 font-bold rounded-full text-[10px] whitespace-nowrap border"
+                            style={{
+                              backgroundColor: `${bColor}12`,
+                              borderColor: `${bColor}3c`,
+                              color: bColor
+                            }}
+                          >
+                            {t.category}
+                          </span>
+                        );
+                      })()}
                     </td>
 
                     {/* Date */}

@@ -362,7 +362,7 @@ export default function App() {
 
         {/* Analytics Dashboard (Charts Grid) */}
         <section id="charts-section">
-          <ChartsView transactions={transactions} />
+          <ChartsView transactions={transactions} budgets={budgets} />
         </section>
 
         {/* Ledger and Side managers split panel */}
@@ -409,6 +409,7 @@ export default function App() {
                 transactions={transactions}
                 onDeleteTransaction={handleDeleteTransaction}
                 onEditTransaction={handleEditTransactionClick}
+                budgets={budgets}
               />
             </div>
 

@@ -14,7 +14,7 @@ import {
   AreaChart, 
   Area 
 } from 'recharts';
-import { Transaction } from '../types';
+import { Transaction, BudgetLimit } from '../types';
 import { 
   TrendingUp, 
   Coins, 
@@ -30,6 +30,7 @@ import {
 
 interface ChartsViewProps {
   transactions: Transaction[];
+  budgets?: BudgetLimit[];
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -45,8 +46,14 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 const DEFAULT_COLOR = '#94a3b8';
 
-export function ChartsView({ transactions }: ChartsViewProps) {
+export function ChartsView({ transactions, budgets = [] }: ChartsViewProps) {
   const [activeTab, setActiveTab] = useState<'all' | 'velocity' | 'allocation'>('all');
+
+  // Helper to dynamically get custom color theme chosen by the user
+  const getCategoryColor = (name: string) => {
+    const budget = budgets.find((b) => b.category === name);
+    return budget?.color || CATEGORY_COLORS[name] || DEFAULT_COLOR;
+  };
 
   // 1. Process Data for Expense Category Pie Chart
   const expenses = transactions.filter((t) => t.type === 'EXPENSE');
@@ -59,7 +66,7 @@ export function ChartsView({ transactions }: ChartsViewProps) {
   const pieData = Object.entries(categoryTotals).map(([name, value]) => ({
     name,
     value,
-    color: CATEGORY_COLORS[name] || DEFAULT_COLOR,
+    color: getCategoryColor(name),
   })).sort((a, b) => b.value - a.value);
 
   // 2. Process Data for Monthly Income vs Expense Bar Chart
