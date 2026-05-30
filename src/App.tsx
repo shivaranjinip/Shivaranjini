@@ -7,9 +7,10 @@ import { TransactionList } from './components/TransactionList';
 import { BudgetLimits } from './components/BudgetLimits';
 import { SavingsGoalsTracker } from './components/SavingsGoalsTracker';
 import { AIInsightsPanel } from './components/AIInsightsPanel';
-import { Plus, Check, Moon, Sun, ShieldAlert, Sparkles, LogOut } from 'lucide-react';
+import { Plus, Check, Moon, Sun, ShieldAlert, Sparkles, LogOut, ShieldCheck } from 'lucide-react';
 import { LoginScreen } from './components/LoginScreen';
 import { ExitPage } from './components/ExitPage';
+import { AdminPanel } from './components/AdminPanel';
 
 const INITIAL_TRANSACTIONS: Transaction[] = [
   {
@@ -125,6 +126,59 @@ export default function App() {
 
   const [isExited, setIsExited] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  // Admin control center states
+  const [isAdminViewActive, setIsAdminViewActive] = useState(false);
+  const [announcementBanner, setAnnouncementBanner] = useState<string>(() => {
+    return localStorage.getItem('expense_pro_announcement') || '';
+  });
+
+  useEffect(() => {
+    const handleSettingsChange = () => {
+      setAnnouncementBanner(localStorage.getItem('expense_pro_announcement') || '');
+    };
+    window.addEventListener('expense_pro_settings_changed', handleSettingsChange);
+    return () => {
+      window.removeEventListener('expense_pro_settings_changed', handleSettingsChange);
+    };
+  }, []);
+
+  const handleImpersonateUser = (email: string, name: string) => {
+    const userSession = { email, name };
+    setCurrentUser(userSession);
+    localStorage.setItem('expense_pro_current_session', JSON.stringify(userSession));
+    setIsAdminViewActive(false);
+  };
+
+  const handleResetAllData = () => {
+    // Clear sandbox keys first
+    localStorage.removeItem('expense_pro_transactions');
+    localStorage.removeItem('expense_pro_budgets');
+    localStorage.removeItem('expense_pro_goals');
+    localStorage.removeItem('expense_pro_alert_threshold');
+    localStorage.removeItem('expense_pro_currency_symbol');
+    localStorage.removeItem('expense_pro_announcement');
+
+    setTransactions(INITIAL_TRANSACTIONS);
+    setBudgets(INITIAL_BUDGETS);
+    setSavingsGoals(INITIAL_GOALS);
+
+    localStorage.setItem('expense_pro_transactions', JSON.stringify(INITIAL_TRANSACTIONS));
+    localStorage.setItem('expense_pro_budgets', JSON.stringify(INITIAL_BUDGETS));
+    localStorage.setItem('expense_pro_goals', JSON.stringify(INITIAL_GOALS));
+
+    // Force return back to demonstration mode
+    const defaultUser = { email: 'demo@expensepro.com', name: 'Demonstration User' };
+    setCurrentUser(defaultUser);
+    localStorage.setItem('expense_pro_current_session', JSON.stringify(defaultUser));
+    
+    setIsAdminViewActive(false);
+  };
+
+  const handleUpdateTransactions = (updatedTxs: Transaction[]) => {
+    setTransactions(updatedTxs);
+    saveToLocalStorage('expense_pro_transactions', updatedTxs);
+  };
 
   const handleLoginSuccess = (email: string, name: string) => {
     const userSession = { email, name };
@@ -292,8 +346,31 @@ export default function App() {
     return <LoginScreen onLoginSuccess={handleLoginSuccess} />;
   }
 
+  if (isAdminViewActive) {
+    return (
+      <AdminPanel
+        onBackToDashboard={() => setIsAdminViewActive(false)}
+        currentUser={currentUser}
+        onImpersonateUser={handleImpersonateUser}
+        transactions={transactions}
+        budgets={budgets}
+        savingsGoals={savingsGoals}
+        onResetAllData={handleResetAllData}
+        onUpdateTransactions={handleUpdateTransactions}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50/50 flex flex-col justify-between" id="applet-viewport">
+
+      {/* Dynamic Admin announcement broadcast banner */}
+      {announcementBanner && (
+        <div className="bg-amber-500 text-slate-950 text-xs font-bold py-2.5 px-4 text-center flex items-center justify-center gap-1.5 animate-pulse relative z-50 border-b border-amber-600/20" id="admin-broadcast-banner">
+          <Sparkles className="w-3.5 h-3.5 shrink-0 text-slate-950 fill-slate-950" />
+          <span>{announcementBanner}</span>
+        </div>
+      )}
       
       {/* 🚀 Top Navigation Header */}
       <header className="bg-white border-b border-slate-100 py-4 px-6 md:px-12 sticky top-0 z-50 shadow-xs" id="app-navigation-header">
@@ -304,10 +381,7 @@ export default function App() {
             </div>
             <div>
               <h1 className="text-xl font-bold font-display tracking-tight text-slate-800 flex items-center gap-1.5 leading-none">
-                <span>ExpensePro</span>
-                <span className="text-[10px] bg-blue-50 text-blue-600 font-bold border border-blue-100 rounded-md px-1.5 py-0.5 mt-0.5">
-                  BCA Project V1
-                </span>
+                <span>Expense</span>
               </h1>
               <p className="text-[10px] text-slate-400 font-medium">Personal Finance Tracking and Intelligent Advice Analyzer</p>
             </div>
@@ -327,6 +401,17 @@ export default function App() {
             <span className="text-xs text-slate-400 font-medium hidden sm:inline">
               Today: <b className="text-slate-600 font-bold">{new Date().toLocaleDateString('en-IN', { weekday: 'short', day: '2-digit', month: 'short' })}</b>
             </span>
+
+            <button
+              id="btn-trigger-admin-view"
+              onClick={() => setIsAdminViewActive(true)}
+              className="py-2.5 px-3 border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-800 text-xs font-semibold rounded-xl cursor-pointer transition-all flex items-center gap-1.5"
+              title="Open Sovereignty Admin Control Panel"
+            >
+              <ShieldCheck className="w-4.5 h-4.5 text-blue-600" />
+              <span className="hidden sm:inline">Admin Panel</span>
+            </button>
+
             <button
               id="btn-trigger-add-transaction"
               onClick={() => {
@@ -421,9 +506,8 @@ export default function App() {
 
       {/* 📜 Footer Credits Section */}
       <footer className="bg-white border-t border-slate-100 py-6 text-center text-xs text-slate-400" id="app-credits-footer">
-        <p className="font-semibold text-slate-500">ExpensePro - Personal expensesTracker</p>
-        <p className="mt-1">Successfully designed for BCA Fifth/Sixth Semester Final Year Project Demonstration</p>
-        <p className="mt-2 text-[10px] text-slate-300">© 2026 ExpensePro Project Applet. Local client storage data persistent.</p>
+        <p className="font-semibold text-slate-500">Expense - Personal Expenses Tracker</p>
+        <p className="mt-2 text-[10px] text-slate-300">© 2026 Expense Project. Local client storage data persistent.</p>
       </footer>
 
       {/* 📝 Record / Edit Transaction Modal */}
@@ -452,7 +536,7 @@ export default function App() {
             </div>
             
             <p className="text-xs text-slate-500 leading-relaxed">
-              Are you sure you want to log out and terminate your current ExpensePro secure workspace session? Your budget and ledger targets will remain cached on your device.
+              Are you sure you want to log out and terminate your current Expense secure workspace session? Your budget and ledger targets will remain cached on your device.
             </p>
 
             <div className="flex gap-2.5 pt-1.5">

@@ -112,15 +112,12 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
               ₹
             </div>
             <div>
-              <span className="font-header text-base text-organic-text-on font-bold tracking-tight block">ExpensePro</span>
+              <span className="font-header text-base text-organic-text-on font-bold tracking-tight block">Expense</span>
               <span className="text-[9px] uppercase tracking-wider font-bold text-organic-primary mt-[-2px] block">
                 Sovereign Ledger
               </span>
             </div>
           </div>
-          <span className="text-[10px] bg-organic-surface-low border border-organic-border/40 text-[#6b6358] px-2 py-0.5 rounded-full font-bold">
-            BCA PROJECT
-          </span>
         </div>
 
         {/* Core Auth Forms block */}
@@ -289,9 +286,9 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
           )}
         </div>
 
-        {/* Academic Project Credits */}
+        {/* Project Credits */}
         <footer className="text-[10px] text-organic-secondary/80 border-t border-organic-border/40 pt-4 flex flex-col gap-1" id="academic-notes">
-          <p className="font-semibold text-organic-text-on">© 2026 ExpensePro Project Applet.</p>
+          <p className="font-semibold text-organic-text-on">© 2026 Expense Project.</p>
           <p>Rooted in Clarity • Secured with Sovereign Device LocalStorage</p>
         </footer>
 
@@ -324,7 +321,7 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
               Sovereign Asset Cultivation
             </h2>
             <p className="text-sm text-[#4a4538] leading-relaxed">
-              Experience a highly structured approaches to consumer accounting. ExpensePro helps you cultivate your funds with calm, purposeful, and steady milestones.
+              Experience a highly structured approaches to consumer accounting. Expense helps you cultivate your funds with calm, purposeful, and steady milestones.
             </p>
           </div>
 

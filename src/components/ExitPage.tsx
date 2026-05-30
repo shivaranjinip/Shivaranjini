@@ -16,14 +16,11 @@ export function ExitPage({ onReturnToLogin }: ExitPageProps) {
             ₹
           </div>
           <div>
-            <span className="font-bold text-lg text-slate-100 font-display tracking-tight">ExpensePro</span>
+            <span className="font-bold text-lg text-slate-100 font-display tracking-tight">Expense</span>
             <span className="text-[9px] text-emerald-400 font-bold ml-1.5 border border-emerald-900/40 bg-emerald-950/80 px-1 py-0.5 rounded uppercase tracking-wider">
               Finalized
             </span>
           </div>
-        </div>
-        <div>
-          <span className="text-[10px] text-slate-500 font-medium tracking-wide">BCA FINAL LEVEL PROJECT</span>
         </div>
       </div>
 
@@ -44,7 +41,7 @@ export function ExitPage({ onReturnToLogin }: ExitPageProps) {
               Logged Out Successfully
             </h2>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Your ExpensePro session has been closed securely. All database transaction ledgers and cache changes have been encrypted and committed to local device cache safely.
+              Your Expense session has been closed securely. All database transaction ledgers and cache changes have been encrypted and committed to local device cache safely.
             </p>
           </div>
 
@@ -77,7 +74,7 @@ export function ExitPage({ onReturnToLogin }: ExitPageProps) {
 
       {/* Footer copyright */}
       <div className="text-center py-4 border-t border-slate-900 max-w-7xl mx-auto w-full flex flex-col sm:flex-row justify-between items-center text-[11px] text-slate-600 gap-2" id="exit-footer">
-        <p>© 2026 ExpensePro Academic Project Sandbox Client. All rights reserved.</p>
+        <p>© 2026 Expense Project Sandbox Client. All rights reserved.</p>
         <p className="font-medium bg-slate-900 border border-slate-800 text-slate-500 px-2 py-0.5 rounded">
           Local Storage Session Cache Mode
         </p>
